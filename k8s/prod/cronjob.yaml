@@ -2,7 +2,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: Requeue
-  namespace: abuse-api-dev
+  namespace: abuse-api-prod
   labels:
     app: requeue
 spec:
@@ -32,7 +32,7 @@ spec:
               image: docker-dcu-local.artifactory.secureserver.net/requeue:dev
               env:
                 - name: sysenv
-                  value: dev
+                  value: prod
                 - name: BUILD_DATE
                   value: THIS_STRING_IS_REPLACED_DURING_BUILD
                 - name: BROKER_URL
