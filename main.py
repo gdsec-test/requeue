@@ -1,5 +1,5 @@
-import os
 import logging
+import os
 from pika.exceptions import ChannelWrongStateError
 from rabbitmq.consumer import Consumer
 from rabbitmq.producer import Publisher
@@ -21,5 +21,5 @@ if __name__ == '__main__':
         try:
             c.consume()
         except ChannelWrongStateError as cc:
-            logging.info(f'Channel has closed stopping consumer: {cc}')
+            logging.debug(f'Channel has closed stopping consumer: {cc}')
             exit(0)

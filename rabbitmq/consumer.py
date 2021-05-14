@@ -1,7 +1,8 @@
+import json
 import logging
 import ssl
-import json
-from datetime import datetime, timedelta
+from datetime import datetime
+
 from pika import BlockingConnection, SSLOptions, connection, credentials
 
 

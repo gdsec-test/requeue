@@ -1,7 +1,9 @@
 import json
 import logging
 import ssl
-from pika import (BlockingConnection, SSLOptions, connection, credentials, exceptions)
+
+from pika import (BlockingConnection, SSLOptions, connection, credentials,
+                  exceptions)
 
 
 class Publisher:
@@ -42,4 +44,3 @@ class Publisher:
     def close(self):
         if self._connection and self._connection.is_open:
             self._connection.close()
-

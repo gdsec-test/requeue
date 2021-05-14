@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: Requeue
+  name: requeue
   namespace: abuse-api-dev
   labels:
     app: requeue
@@ -27,20 +27,20 @@ spec:
           imagePullSecrets:
             - name: dcu-artifactory-creds
           containers:
-            - name: Requeue
+            - name: requeue
               imagePullPolicy: Always
               image: docker-dcu-local.artifactory.secureserver.net/requeue:dev
               env:
                 - name: sysenv
-                  value: dev
+                  value: "dev"
                 - name: BUILD_DATE
-                  value: THIS_STRING_IS_REPLACED_DURING_BUILD
+                  value: "THIS_STRING_IS_REPLACED_DURING_BUILD"
                 - name: BROKER_URL
-                  value: rmq-dcu.int.godaddy.com
+                  value: "rmq-dcu.int.godaddy.com"
                 - name: VHOST
-                  value: pdna
+                  value: "pdna"
                 - name: PORT
-                  value: 5672
+                  value: "5672"
                 - name: USERNAME
                   valueFrom:
                     secretKeyRef:
