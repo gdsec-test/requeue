@@ -23,7 +23,7 @@ class Publisher:
         if not self._connection:
             self._connection = BlockingConnection(self._params)
             self._channel = self._connection.channel()
-            self._channel.exchange_declare('hashserve-dev-dlq', durable=True, internal=True)
+            self._channel.exchange_declare(f'hashserve-{self.env}-dlq', durable=True, internal=True)
             return self._channel
 
     def _publish(self, msg):

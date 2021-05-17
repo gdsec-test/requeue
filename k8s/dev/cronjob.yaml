@@ -6,7 +6,7 @@ metadata:
   labels:
     app: requeue
 spec:
-  schedule: "0 */1 * * *"
+  schedule: " 0 1 * * *"
 
   # Deadline in seconds for starting the job if it misses its scheduled time.
   startingDeadlineSeconds: 60

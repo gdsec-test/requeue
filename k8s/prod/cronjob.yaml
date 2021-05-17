@@ -1,12 +1,12 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: Requeue
+  name: requeue
   namespace: abuse-api-prod
   labels:
     app: requeue
 spec:
-  schedule: "0 */1 * * *"
+  schedule: " 0 1 * * *"
 
   # Deadline in seconds for starting the job if it misses its scheduled time.
   startingDeadlineSeconds: 60
@@ -29,18 +29,18 @@ spec:
           containers:
             - name: Requeue
               imagePullPolicy: Always
-              image: docker-dcu-local.artifactory.secureserver.net/requeue:dev
+              image: docker-dcu-local.artifactory.secureserver.net/requeue:REPLACE_WITH_GIT_COMMIT
               env:
                 - name: sysenv
-                  value: prod
+                  value: "prod"
                 - name: BUILD_DATE
-                  value: THIS_STRING_IS_REPLACED_DURING_BUILD
+                  value: "THIS_STRING_IS_REPLACED_DURING_BUILD"
                 - name: BROKER_URL
-                  value: rmq-dcu.int.godaddy.com
+                  value: "rmq-dcu.int.godaddy.com"
                 - name: VHOST
-                  value: pdna
+                  value: "pdna"
                 - name: PORT
-                  value: 5672
+                  value: "5672"
                 - name: USERNAME
                   valueFrom:
                     secretKeyRef:
