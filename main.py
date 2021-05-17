@@ -1,6 +1,8 @@
 import logging
 import os
+
 from pika.exceptions import ChannelWrongStateError
+
 from rabbitmq.consumer import Consumer
 from rabbitmq.producer import Publisher
 
