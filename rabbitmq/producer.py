@@ -27,7 +27,7 @@ class Publisher:
             return self._channel
 
     def _publish(self, msg):
-        logging.info(f'Publishing message to hashserve: {msg}')
+        logging.debug(f'Publishing message to hashserve: {msg}')
         self._channel.basic_publish(
             exchange='hashserve',
             routing_key=f'#.{self.env}',

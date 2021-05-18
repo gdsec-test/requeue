@@ -39,7 +39,7 @@ class Consumer:
             self._connection.close()
             self.publisher.close()
         else:
-            logging.info(f'Consuming Messages from DLQ, consumed: {body}')
+            logging.debug(f'Consuming Messages from DLQ, consumed: {body}')
             msg = body.decode("utf-8")
             self.publisher.publish(msg)
 
