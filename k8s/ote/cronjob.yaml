@@ -1,0 +1,53 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: requeue
+  namespace: abuse-api-dev
+  labels:
+    app: requeue
+spec:
+  schedule: " 0 1 * * *"
+
+  # Deadline in seconds for starting the job if it misses its scheduled time.
+  startingDeadlineSeconds: 60
+
+  concurrencyPolicy: Forbid
+
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: requeue
+        spec:
+          restartPolicy: OnFailure
+          imagePullSecrets:
+            - name: dcu-artifactory-creds
+          containers:
+            - name: requeue
+              imagePullPolicy: Always
+              image: docker-dcu-local.artifactory.secureserver.net/requeue:dev
+              env:
+                - name: sysenv
+                  value: "ote"
+                - name: BUILD_DATE
+                  value: "THIS_STRING_IS_REPLACED_DURING_BUILD"
+                - name: BROKER_URL
+                  value: "rmq-dcu.int.godaddy.com"
+                - name: VHOST
+                  value: "pdna"
+                - name: PORT
+                  value: "5672"
+                - name: USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: amqp-requeue
+                      key: username
+                - name: PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: amqp-requeue
+                      key: password
