@@ -27,7 +27,7 @@ spec:
           imagePullSecrets:
             - name: dcu-artifactory-creds
           containers:
-            - name: Requeue
+            - name: requeue
               imagePullPolicy: Always
               image: docker-dcu-local.artifactory.secureserver.net/requeue:REPLACE_WITH_GIT_COMMIT
               env:
