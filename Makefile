@@ -52,11 +52,18 @@ prod: prep
 	docker build -t $(DOCKERREPO):$(COMMIT) $(BUILDROOT)
 	git checkout -
 
+
 .PHONY: dev
 dev: prep
 	@echo "----- building $(REPONAME) dev -----"
 	sed -ie 's/THIS_STRING_IS_REPLACED_DURING_BUILD/$(DATE)/g' $(BUILDROOT)/k8s/dev/cronjob.yaml
 	docker build -t $(DOCKERREPO):dev $(BUILDROOT)
+
+.PHONY: ote
+ote: prep
+	@echo "----- building $(REPONAME) $(BUILD_VERSION) -----"
+	sed -ie 's/THIS_STRING_IS_REPLACED_DURING_BUILD/$(build_date)/g' $(BUILDROOT)/k8s/ote/cronjob.yaml
+	docker build -t $(DOCKERREPO):ote $(BUILDROOT)
 
 .PHONY: prod-deploy
 prod-deploy: prod
@@ -69,6 +76,12 @@ dev-deploy: dev
 	@echo "----- deploying $(REPONAME) dev -----"
 	docker push $(DOCKERREPO):dev
 	kubectl --context dev-dcu apply -f $(BUILDROOT)/k8s/dev/cronjob.yaml --record
+
+.PHONY: ote-deploy
+ote-deploy: ote
+	@echo "----- deploying $(REPONAME) ote -----"
+	docker push $(DOCKERREPO):ote
+	kubectl --context ote-dcu apply -f $(BUILDROOT)/k8s/ote/cronjob.yaml --record
 
 .PHONY: clean
 clean:
