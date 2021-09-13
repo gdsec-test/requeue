@@ -44,10 +44,10 @@ spec:
                 - name: USERNAME
                   valueFrom:
                     secretKeyRef:
-                      name: amqp-requeue
+                      name: amqp-shared-creds
                       key: username
                 - name: PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: amqp-requeue
+                      name: amqp-shared-creds
                       key: password
