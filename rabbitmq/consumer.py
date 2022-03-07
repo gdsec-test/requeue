@@ -40,8 +40,7 @@ class Consumer:
             self.publisher.close()
         else:
             logging.debug(f'Consuming Messages from DLQ, consumed: {body}')
-            msg = body.decode("utf-8")
-            self.publisher.publish(msg)
+            self.publisher.publish(body)
 
     def consume(self):
         self._channel.basic_consume(f'hashserve-{self.env}-dlq',

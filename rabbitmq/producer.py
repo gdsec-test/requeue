@@ -1,4 +1,3 @@
-import json
 import logging
 import ssl
 
@@ -31,7 +30,7 @@ class Publisher:
         self._channel.basic_publish(
             exchange='hashserve',
             routing_key=f'#.{self.env}',
-            body=json.dumps(msg),
+            body=msg,
         )
 
     def publish(self, msg):
