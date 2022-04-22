@@ -1,0 +1,8 @@
+[tool.tartufo]
+repo-path = "."
+exclude-path-patterns = [
+    'tartufo.*',
+    'certs/'
+]
+exclude-signatures = [
+]

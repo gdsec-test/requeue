@@ -37,6 +37,7 @@ testcov:
 prep: tools
 	@echo "----- preparing $(REPONAME) build -----"
 	# copy the app code to the build root
+	mkdir -p $(BUILDROOT)
 	cp -rp ./* $(BUILDROOT)
 
 .PHONY: prod

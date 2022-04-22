@@ -1,33 +1,23 @@
 import json
 import logging
-import ssl
 from datetime import datetime
 
-from pika import BlockingConnection, SSLOptions, connection, credentials
+from pika import BlockingConnection, URLParameters
 
 
 class Consumer:
-    def __init__(self, host, port, vhost, user, password, publisher, env):
-        context = ssl.create_default_context()
-        self._params = connection.ConnectionParameters(
-            host=host,
-            port=port,
-            virtual_host=vhost,
-            credentials=credentials.PlainCredentials(user, password),
-            ssl_options=SSLOptions(context, host))
-        self._connection = None
-        self._channel = None
+    def __init__(self, url, publisher, env):
+        urls = url.split(';')
+        self.conns = []
+        for node in urls:
+            self.conns.append(URLParameters(node))
         self.publisher = publisher
         self.env = env
-        self.queue_len = None
-
-    def connect(self):
-        if not self._connection:
-            self._connection = BlockingConnection(self._params)
-            self._channel = self._connection.channel()
-            self._channel.exchange_declare(f'hashserve-{self.env}-dlq',
-                                           durable=True,
-                                           internal=True)
+        self._connection = BlockingConnection(self.conns)
+        self._channel = self._connection.channel()
+        self._channel.exchange_declare(f'hashserve-{self.env}-dlq',
+                                       durable=True,
+                                       internal=True)
 
     def callback(self, ch, method, properties, body):
         data = json.loads(body)

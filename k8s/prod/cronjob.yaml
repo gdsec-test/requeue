@@ -35,19 +35,19 @@ spec:
                   value: "prod"
                 - name: BUILD_DATE
                   value: "THIS_STRING_IS_REPLACED_DURING_BUILD"
-                - name: BROKER_URL
-                  value: "rmq-dcu.int.godaddy.com"
-                - name: VHOST
-                  value: "pdna"
-                - name: PORT
-                  value: "5672"
-                - name: USERNAME
+                # TODO CMAPT-5032: remove single_broker and queue_type
+                - name: QUEUE_TYPE
+                  valueFrom:
+                    configMapKeyRef:
+                      name: quorum-migration
+                      key: queuetype
+                - name: SINGLE_BROKER
+                  valueFrom:
+                    secretKeyRef:
+                      name: amqp-connection-string-v2
+                      key: url
+                - name: MULTIPLE_BROKERS
                   valueFrom:
                     secretKeyRef:
                       name: amqp-shared-creds
-                      key: username
-                - name: PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: amqp-shared-creds
-                      key: password
+                      key: multiple_brokers_pdna
