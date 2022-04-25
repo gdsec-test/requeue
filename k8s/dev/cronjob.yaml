@@ -35,17 +35,6 @@ spec:
                   value: "dev"
                 - name: BUILD_DATE
                   value: "Fri Apr 22 10:13:43 CDT 2022"
-                # TODO CMAPT-5032: remove single_broker and queue_type
-                - name: QUEUE_TYPE
-                  valueFrom:
-                    configMapKeyRef:
-                      name: quorum-migration
-                      key: queuetype
-                - name: SINGLE_BROKER
-                  valueFrom:
-                    secretKeyRef:
-                      name: amqp-connection-string-v2
-                      key: url
                 - name: MULTIPLE_BROKERS
                   valueFrom:
                     secretKeyRef:

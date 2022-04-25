@@ -6,13 +6,9 @@ from pika.exceptions import ChannelWrongStateError
 from rabbitmq.consumer import Consumer
 from rabbitmq.producer import Publisher
 
-single_url = os.getenv('SINGLE_BROKER')
 multi_url = os.getenv('MULTIPLE_BROKERS')
-queue_type = os.getenv('QUEUE_TYPE')
 
-url = single_url.replace('amqp://', 'amqps://').replace("grandma", "pdna")
-if queue_type == 'quorum':
-    url = multi_url
+url = multi_url
 
 env = os.getenv('sysenv')
 
