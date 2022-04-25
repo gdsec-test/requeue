@@ -10,7 +10,7 @@ single_url = os.getenv('SINGLE_BROKER')
 multi_url = os.getenv('MULTIPLE_BROKERS')
 queue_type = os.getenv('QUEUE_TYPE')
 
-url = single_url
+url = single_url.replace('amqp://', 'amqps://').replace("grandma", "pdna")
 if queue_type == 'quorum':
     url = multi_url
 
