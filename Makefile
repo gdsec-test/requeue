@@ -70,19 +70,19 @@ ote: prep
 prod-deploy: prod
 	@echo "----- deploying $(REPONAME) prod -----"
 	docker push $(DOCKERREPO):$(COMMIT)
-	kubectl --context prod-dcu apply  -k $(BUILDROOT)/k8s/prod --record
+	kubectl --context prod-dcu apply -f $(BUILDROOT)/k8s/prod/cronjob.yaml --record
 
 .PHONY: dev-deploy
 dev-deploy: dev
 	@echo "----- deploying $(REPONAME) dev -----"
 	docker push $(DOCKERREPO):dev
-	kubectl --context dev-dcu apply -k $(BUILDROOT)/k8s/dev --record
+	kubectl --context dev-dcu apply -f $(BUILDROOT)/k8s/dev/cronjob.yaml --record
 
 .PHONY: ote-deploy
 ote-deploy: ote
 	@echo "----- deploying $(REPONAME) ote -----"
 	docker push $(DOCKERREPO):ote
-	kubectl --context ote-dcu apply -k $(BUILDROOT)/k8s/ote --record
+	kubectl --context ote-dcu apply -f $(BUILDROOT)/k8s/ote/cronjob.yaml --record
 
 .PHONY: clean
 clean:
