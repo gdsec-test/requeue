@@ -11,4 +11,5 @@ images:
 configMapGenerator:
 - literals:
   - sysenv=prod
+  - ELASTIC_APM_ENVIRONMENT=prod
   name: env-specific-values

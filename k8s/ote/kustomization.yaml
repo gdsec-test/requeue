@@ -11,4 +11,5 @@ images:
 configMapGenerator:
 - literals:
   - sysenv=ote
+  - ELASTIC_APM_ENVIRONMENT=ote
   name: env-specific-values

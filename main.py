@@ -14,18 +14,17 @@ url = multi_url
 env = os.getenv('sysenv')
 
 instrument()
-apm = Client(service_name='requeue', env=env)
+apm = Client(service_name='requeue')
 
 
 if __name__ == '__main__':
     p = Publisher(url, env)
     c = Consumer(url, p, env)
     while True:
-        apm.begin_transaction("start queuing")
+        apm.begin_transaction(transaction_type='event')
         try:
             c.consume()
-            apm.end_transaction("consume queue", "success")
         except ChannelWrongStateError as cc:
             logging.debug(f'Channel has closed stopping consumer: {cc}')
-            apm.end_transaction("end queueing", "failure")
             exit(0)
+        apm.end_transaction(name="consume queue", result="success")
