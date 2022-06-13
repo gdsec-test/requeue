@@ -48,8 +48,8 @@ prod: prep
 	if [[ `git status --porcelain | wc -l` -gt 0 ]] ; then echo "You must stash your changes before proceeding" ; exit 1 ; fi
 	git fetch && git checkout $(BUILD_BRANCH)
 	$(eval COMMIT:=$(shell git rev-parse --short HEAD))
-	sed -ie 's/THIS_STRING_IS_REPLACED_DURING_BUILD/$(DATE)/' $(BUILDROOT)/k8s/prod/cronjob.yaml
-	sed -ie 's/REPLACE_WITH_GIT_COMMIT/$(COMMIT)/' $(BUILDROOT)/k8s/prod/cronjob.yaml
+	sed -ie 's/THIS_STRING_IS_REPLACED_DURING_BUILD/$(DATE)/' $(BUILDROOT)/k8s/base/cronjob.yaml
+	sed -ie 's/REPLACE_WITH_GIT_COMMIT/$(COMMIT)/' $(BUILDROOT)/k8s/prod/kustomization.yaml
 	docker build -t $(DOCKERREPO):$(COMMIT) $(BUILDROOT)
 	git checkout -
 
@@ -57,13 +57,13 @@ prod: prep
 .PHONY: dev
 dev: prep
 	@echo "----- building $(REPONAME) dev -----"
-	sed -ie 's/THIS_STRING_IS_REPLACED_DURING_BUILD/$(DATE)/g' $(BUILDROOT)/k8s/dev/cronjob.yaml
+	sed -ie 's/THIS_STRING_IS_REPLACED_DURING_BUILD/$(DATE)/g' $(BUILDROOT)/k8s/base/cronjob.yaml
 	docker build -t $(DOCKERREPO):dev $(BUILDROOT)
 
 .PHONY: ote
 ote: prep
 	@echo "----- building $(REPONAME) $(BUILD_VERSION) -----"
-	sed -ie 's/THIS_STRING_IS_REPLACED_DURING_BUILD/$(build_date)/g' $(BUILDROOT)/k8s/ote/cronjob.yaml
+	sed -ie 's/THIS_STRING_IS_REPLACED_DURING_BUILD/$(build_date)/g' $(BUILDROOT)/k8s/base/cronjob.yaml
 	docker build -t $(DOCKERREPO):ote $(BUILDROOT)
 
 .PHONY: prod-deploy
