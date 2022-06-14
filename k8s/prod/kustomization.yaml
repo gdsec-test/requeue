@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../base
+
+namespace: abuse-api-prod
+images:
+- name: docker-dcu-local.artifactory.secureserver.net/requeue
+  newTag: prod
+
+configMapGenerator:
+- literals:
+  - sysenv=prod
+  - ELASTIC_APM_ENVIRONMENT=prod
+  name: env-specific-values

@@ -5,6 +5,18 @@ DATE=$(shell date)
 BUILD_BRANCH=origin/main
 SHELL=/bin/bash
 
+define build_k8s
+	kustomize edit set env BUILD_DATE=$(DATE)
+	docker build -t $(DOCKERREPO):$(2) $(BUILDROOT)
+endef
+
+define deploy_k8s
+	docker push $(DOCKERREPO):$(2)
+	cd k8s/$(1) && kustomize edit set image $(DOCKERREPO):$(2)
+	kubectl --context $(1)-dcu apply -k $(BUILDROOT)/k8s/$(1)/ --record
+	cd k8s/$(1) && kustomize edit set image $(DOCKERREPO):$(1)
+endef
+
 all: env
 
 env:
@@ -48,41 +60,33 @@ prod: prep
 	if [[ `git status --porcelain | wc -l` -gt 0 ]] ; then echo "You must stash your changes before proceeding" ; exit 1 ; fi
 	git fetch && git checkout $(BUILD_BRANCH)
 	$(eval COMMIT:=$(shell git rev-parse --short HEAD))
-	sed -ie 's/THIS_STRING_IS_REPLACED_DURING_BUILD/$(DATE)/' $(BUILDROOT)/k8s/prod/cronjob.yaml
-	sed -ie 's/REPLACE_WITH_GIT_COMMIT/$(COMMIT)/' $(BUILDROOT)/k8s/prod/cronjob.yaml
-	docker build -t $(DOCKERREPO):$(COMMIT) $(BUILDROOT)
+	$(call build_k8s,prod,$(COMMIT))
 	git checkout -
-
 
 .PHONY: dev
 dev: prep
 	@echo "----- building $(REPONAME) dev -----"
-	sed -ie 's/THIS_STRING_IS_REPLACED_DURING_BUILD/$(DATE)/g' $(BUILDROOT)/k8s/dev/cronjob.yaml
-	docker build -t $(DOCKERREPO):dev $(BUILDROOT)
+	$(call build_k8s,dev,dev)
 
 .PHONY: ote
 ote: prep
 	@echo "----- building $(REPONAME) $(BUILD_VERSION) -----"
-	sed -ie 's/THIS_STRING_IS_REPLACED_DURING_BUILD/$(build_date)/g' $(BUILDROOT)/k8s/ote/cronjob.yaml
-	docker build -t $(DOCKERREPO):ote $(BUILDROOT)
+	$(call build_k8s,ote,ote)
 
 .PHONY: prod-deploy
 prod-deploy: prod
 	@echo "----- deploying $(REPONAME) prod -----"
-	docker push $(DOCKERREPO):$(COMMIT)
-	kubectl --context prod-dcu apply -f $(BUILDROOT)/k8s/prod/cronjob.yaml --record
+	$(call deploy_k8s,prod,$(COMMIT))
 
 .PHONY: dev-deploy
 dev-deploy: dev
 	@echo "----- deploying $(REPONAME) dev -----"
-	docker push $(DOCKERREPO):dev
-	kubectl --context dev-dcu apply -f $(BUILDROOT)/k8s/dev/cronjob.yaml --record
+	$(call deploy_k8s,dev,dev)
 
 .PHONY: ote-deploy
 ote-deploy: ote
 	@echo "----- deploying $(REPONAME) ote -----"
-	docker push $(DOCKERREPO):ote
-	kubectl --context ote-dcu apply -f $(BUILDROOT)/k8s/ote/cronjob.yaml --record
+	$(call deploy_k8s,ote,ote)
 
 .PHONY: clean
 clean:
