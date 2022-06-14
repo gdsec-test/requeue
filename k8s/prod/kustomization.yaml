@@ -6,7 +6,7 @@ resources:
 namespace: abuse-api-prod
 images:
 - name: docker-dcu-local.artifactory.secureserver.net/requeue
-  newTag: REPLACE_WITH_GIT_COMMIT
+  newTag: prod
 
 configMapGenerator:
 - literals:

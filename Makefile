@@ -12,7 +12,9 @@ endef
 
 define deploy_k8s
 	docker push $(DOCKERREPO):$(2)
+	cd k8s/$(1) && kustomize edit set image $(DOCKERREPO):$(2)
 	kubectl --context $(1)-dcu apply -k $(BUILDROOT)/k8s/$(1)/ --record
+	cd k8s/$(1) && kustomize edit set image $(DOCKERREPO):$(1)
 endef
 
 all: env
@@ -69,7 +71,7 @@ dev: prep
 .PHONY: ote
 ote: prep
 	@echo "----- building $(REPONAME) $(BUILD_VERSION) -----"
-	$(call build_k8s,dev,dev)
+	$(call build_k8s,ote,ote)
 
 .PHONY: prod-deploy
 prod-deploy: prod
