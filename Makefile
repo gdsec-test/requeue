@@ -81,7 +81,12 @@ prod-deploy: prod
 .PHONY: dev-deploy
 dev-deploy: dev
 	@echo "----- deploying $(REPONAME) dev -----"
+<<<<<<< Updated upstream
 	$(call deploy_k8s,dev,dev)
+=======
+	docker push $(DOCKERREPO):dev
+	kubectl --context dev-cset apply -f $(BUILDROOT)/k8s/dev/cronjob.yaml --record
+>>>>>>> Stashed changes
 
 .PHONY: ote-deploy
 ote-deploy: ote
