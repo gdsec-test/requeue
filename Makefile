@@ -13,7 +13,7 @@ endef
 define deploy_k8s
 	docker push $(DOCKERREPO):$(2)
 	cd k8s/$(1) && kustomize edit set image $(DOCKERREPO):$(2)
-	kubectl --context $(1)-dcu apply -k k8s/$(1)/ --record
+	kubectl --context $(1)-cset apply -k k8s/$(1)/ --record
 	cd k8s/$(1) && kustomize edit set image $(DOCKERREPO):$(1)
 endef
 
@@ -55,13 +55,11 @@ prep: tools
 .PHONY: prod
 prod: prep
 	@echo "----- building $(REPONAME) prod -----"
-	read -p "About to build production image from $(BUILD_BRANCH) branch. Are you sure? (Y/N): " response ; \
+	read -p "About to deploy a production image. Are you sure? (Y/N): " response ; \
 	if [[ $$response == 'N' || $$response == 'n' ]] ; then exit 1 ; fi
 	if [[ `git status --porcelain | wc -l` -gt 0 ]] ; then echo "You must stash your changes before proceeding" ; exit 1 ; fi
-	git fetch && git checkout $(BUILD_BRANCH)
 	$(eval COMMIT:=$(shell git rev-parse --short HEAD))
 	$(call build_k8s,prod,$(COMMIT))
-	git checkout -
 
 .PHONY: dev
 dev: prep
@@ -81,12 +79,7 @@ prod-deploy: prod
 .PHONY: dev-deploy
 dev-deploy: dev
 	@echo "----- deploying $(REPONAME) dev -----"
-<<<<<<< Updated upstream
 	$(call deploy_k8s,dev,dev)
-=======
-	docker push $(DOCKERREPO):dev
-	kubectl --context dev-cset apply -f $(BUILDROOT)/k8s/dev/cronjob.yaml --record
->>>>>>> Stashed changes
 
 .PHONY: ote-deploy
 ote-deploy: ote
