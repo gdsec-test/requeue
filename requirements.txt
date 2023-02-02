@@ -1,4 +1,4 @@
 pamqp==2.3.0
 pika==1.2.0
 six==1.15.0
-elastic-apm==6.7.2
+elastic-apm==6.14.0

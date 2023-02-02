@@ -20,6 +20,7 @@ endef
 all: env
 
 env:
+	pip install -r test_requirements.txt
 	pip install -r requirements.txt
 
 .PHONY: flake8

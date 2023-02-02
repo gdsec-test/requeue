@@ -33,6 +33,11 @@ class Consumer:
             self.publisher.publish(body)
 
     def consume(self):
+        q = self._channel.queue_declare(f'hashserve-{self.env}-dlq', durable=True, arguments={'x-queue-type': 'quorum'})
+        if q.method.message_count == 0:
+            self._connection.close()
+            self.publisher.close()
+
         self._channel.basic_consume(f'hashserve-{self.env}-dlq',
                                     on_message_callback=self.callback,
                                     auto_ack=True)
