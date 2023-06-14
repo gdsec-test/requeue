@@ -17,27 +17,19 @@ define deploy_k8s
 	cd k8s/$(1) && kustomize edit set image $(DOCKERREPO):$(1)
 endef
 
-all: env
+all: init
 
-env:
+init:
 	pip install -r test_requirements.txt
 	pip install -r requirements.txt
 
-.PHONY: flake8
-flake8:
-	@echo "----- Running linter -----"
+.PHONY: lint
+lint:
+	isort -rc --atomic .
 	flake8 --config ./.flake8 .
 
-.PHONY: isort
-isort:
-	@echo "----- Optimizing imports -----"
-	isort -rc --atomic .
-
-.PHONY: tools
-tools: flake8 isort
-
-.PHONY: test
-test:
+.PHONY: unit-test
+unit-test:
 	@echo "----- Running tests -----"
 	nosetests tests
 
@@ -47,7 +39,7 @@ testcov:
 	nosetests tests --with-coverage --cover-erase --cover-package=categorizer
 
 .PHONY: prep
-prep: tools
+prep: lint
 	@echo "----- preparing $(REPONAME) build -----"
 	# copy the app code to the build root
 	mkdir -p $(BUILDROOT)
