@@ -1,0 +1,19 @@
+---
+name: Run CI
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - ISSE-971
+    pull_request:
+        branches:
+            - ISSE-971
+
+jobs:
+    ci:
+        runs-on: [csetubuntu]
+        steps:
+                
+            - name: Checkout repo
+                uses: actions/checkout@v2
