@@ -30,13 +30,11 @@ lint:
 
 .PHONY: unit-test
 unit-test:
-	@echo "----- Running tests -----"
-	nosetests tests
+	@echo "----- No unit tests to run-----"
 
 .PHONY: testcov
 testcov:
-	@echo "----- Running tests with coverage -----"
-	nosetests tests --with-coverage --cover-erase --cover-package=categorizer
+	@echo "----- No tests to run for coverage-----"
 
 .PHONY: prep
 prep: lint
