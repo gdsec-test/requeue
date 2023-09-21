@@ -5,7 +5,7 @@ resources:
 
 namespace: abuse-api-dev
 images:
-- name: docker-dcu-local.artifactory.secureserver.net/requeue
+- name: gdartifactory1.jfrog.io/docker-dcu-local/requeue
   newTag: dev
 
 patches:

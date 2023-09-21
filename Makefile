@@ -1,6 +1,6 @@
 REPONAME=digital-crimes/requeue
 BUILDROOT=$(HOME)/dockerbuild/$(REPONAME)
-DOCKERREPO=docker-dcu-local.artifactory.secureserver.net/requeue
+DOCKERREPO=gdartifactory1.jfrog.io/docker-dcu-local/requeue
 DATE=$(shell date)
 BUILD_BRANCH=origin/main
 SHELL=/bin/bash

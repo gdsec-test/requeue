@@ -25,11 +25,11 @@ spec:
         spec:
           restartPolicy: OnFailure
           imagePullSecrets:
-            - name: dcu-artifactory-creds
+            - name: artifactory-saas-creds
           containers:
             - name: requeue
               imagePullPolicy: Always
-              image: docker-dcu-local.artifactory.secureserver.net/requeue
+              image: gdartifactory1.jfrog.io/docker-dcu-local/requeue
               envFrom:
               - configMapRef:
                   name: env-specific-values
